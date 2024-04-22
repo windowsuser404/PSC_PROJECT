@@ -46,26 +46,6 @@ void cooley_turkey(Complex *matrix, unsigned int &n, int invert) {
   }
 }
 
-void center_ffts(Matrix *&fft_mat) {
-  int Rows = fft_mat->rows;
-  int Cols = fft_mat->cols;
-  int cx = Cols / 2;
-  int cy = Rows / 2;
-  for (unsigned int i = 0; i < cx; i++) {
-    for (unsigned int j = 0; j < cy; j++) {
-      // Calculate indices for quadrant swapping
-      int index_q0 = j * Cols + i;
-      int index_q1 = j * Cols + (i + cx);
-      int index_q2 = (j + cy) * Cols + i;
-      int index_q3 = (j + cy) * Cols + (i + cx);
-
-      // Swap quadrants (q0 with q3, q1 with q2)
-      std::swap(fft_mat->matrix[index_q0], fft_mat->matrix[index_q3]);
-      std::swap(fft_mat->matrix[index_q1], fft_mat->matrix[index_q2]);
-    }
-  }
-}
-
 // will use standard cooley-turkey algorithm
 Matrix *fft2d(Matrix *&padded_matrix, const int &to_invert) {
   // to parallelise
@@ -79,8 +59,6 @@ Matrix *fft2d(Matrix *&padded_matrix, const int &to_invert) {
   Matrix *transposed_matrix = transpose(padded_matrix);
   Rows = transposed_matrix->rows;
   Cols = transposed_matrix->cols;
-
-  cout << Rows << " " << Cols << endl;
 
   for (unsigned int i = 0; i < Rows; i++) {
     cooley_turkey(&(transposed_matrix->matrix[i * Cols]), Cols, to_invert);

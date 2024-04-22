@@ -71,6 +71,7 @@ Matrix *fft2d(Matrix *&padded_matrix, const int &to_invert) {
   // to parallelise
   unsigned Rows = padded_matrix->rows;
   unsigned Cols = padded_matrix->cols;
+
   for (unsigned int i = 0; i < Rows; i++) {
     cooley_turkey(&(padded_matrix->matrix[i * Cols]), Cols, to_invert);
   }
@@ -78,6 +79,8 @@ Matrix *fft2d(Matrix *&padded_matrix, const int &to_invert) {
   Matrix *transposed_matrix = transpose(padded_matrix);
   Rows = transposed_matrix->rows;
   Cols = transposed_matrix->cols;
+
+  cout << Rows << " " << Cols << endl;
 
   for (unsigned int i = 0; i < Rows; i++) {
     cooley_turkey(&(transposed_matrix->matrix[i * Cols]), Cols, to_invert);

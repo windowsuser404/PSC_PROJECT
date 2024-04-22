@@ -12,6 +12,7 @@ endif()
 # Include directories
 include_directories(${OpenCV_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories("/usr/include/c++/11")
 
 # Collect source files
 file(GLOB SOURCES *.cpp)

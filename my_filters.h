@@ -1,2 +1,3 @@
 #include "Mat_ops.h"
-cv::Mat img_rotate(Matrix *&fft_mat);
+void low_pass(Matrix *&fft_mat, double &cut_off);
+void high_pass(Matrix *&fft_mat, double &cut_off);

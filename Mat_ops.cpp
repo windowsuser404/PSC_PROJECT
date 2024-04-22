@@ -28,17 +28,20 @@ Matrix *zero_padder(cv::Mat &img, int new_rows, int new_cols) {
 
   for (int i = 0; i < new_rows; i++) {
     for (int j = 0; j < new_cols; j++) {
-      padded_matrix->matrix[i * new_rows + j] = 0;
+      padded_matrix->matrix[i * new_rows + j].real(0);
+      padded_matrix->matrix[i * new_rows + j].imag(0);
     }
   }
   for (int i = 0; i < img.rows; i++) {
     for (int j = 0; j < img.cols; j++) {
       if ((i + j) % 2 == 0) {
-        padded_matrix->matrix[i * new_rows + j] =
-            static_cast<double>(img.at<uchar>(i, j));
+        padded_matrix->matrix[i * new_rows + j].real(
+            static_cast<double>(img.at<uchar>(i, j)));
+        padded_matrix->matrix[i * new_rows + j].imag(0);
       } else {
-        padded_matrix->matrix[i * new_rows + j] =
-            -1 * static_cast<double>(img.at<uchar>(i, j));
+        padded_matrix->matrix[i * new_rows + j].real(
+            -1 * static_cast<double>(img.at<uchar>(i, j)));
+        padded_matrix->matrix[i * new_rows + j].imag(0);
       }
     }
   }
@@ -48,8 +51,10 @@ Matrix *zero_padder(cv::Mat &img, int new_rows, int new_cols) {
 Matrix *cv_to_std(cv::Mat &img) {
   int rows = img.rows;
   int cols = img.cols;
-  int new_rows = pow(2, ceil(log2(rows)));
-  int new_cols = pow(2, ceil(log2(cols)));
+  rows = std::max(rows, cols);
+  cols = rows;
+  int new_rows = 1 << (int)ceil(log2(rows));
+  int new_cols = 1 << (int)ceil(log2(cols));
   Matrix *padded_matrix = zero_padder(img, new_rows, new_cols);
   return padded_matrix;
 }

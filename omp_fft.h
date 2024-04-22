@@ -1,5 +1,5 @@
-#ifndef MY_FFT
-#define MY_FFT
+#ifndef OMP_FFT
+#define OMP_FFT
 #include <omp.h>
 
 #include <opencv2/core/base.hpp>

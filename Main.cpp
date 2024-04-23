@@ -3,24 +3,24 @@
 #include <cstring>
 #include <iostream>
 #include <openacc.h>
-// #include <opencv2/core/types.hpp>
-// #ifndef OPENCV
-// #define OPENCV
-// #include <opencv2/core.hpp>
-// #include <opencv2/core/utility.hpp>
-// #include <opencv2/highgui.hpp>
-// #include <opencv2/imgcodecs.hpp>
-// #endif
-//
-// #include <opencv2/core/hal/interface.h>
-// #include <opencv2/core/mat.hpp>
-// #include <opencv2/core/operations.hpp>
+#include <opencv2/core/types.hpp>
+#ifndef OPENCV
+#define OPENCV
+#include <opencv2/core.hpp>
+#include <opencv2/core/utility.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgcodecs.hpp>
+#endif
 
-// #include "Mat_ops.h"
-// #include "acc_fft.h"
-// #include "my_filters.h"
+#include <opencv2/core/hal/interface.h>
+#include <opencv2/core/mat.hpp>
+#include <opencv2/core/operations.hpp>
 
-// using namespace cv;
+#include "Mat_ops.h"
+#include "acc_fft.h"
+#include "my_filters.h"
+
+using namespace cv;
 
 int main(int argc, char *argv[]) {
   acc_device_t dev_type = acc_get_device_type();

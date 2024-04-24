@@ -16,8 +16,8 @@
 #include <opencv2/core/operations.hpp>
 
 #include "Mat_ops.h"
-#include "my_fft.h"
 #include "my_filters.h"
+#include "omp_fft.h"
 
 using namespace cv;
 
@@ -66,7 +66,8 @@ int main(int argc, char *argv[]) {
   cout << img_matrix->cols << " is new cols" << endl;
   cout << img_matrix->rows << " is new rows" << endl;
   Matrix *fft_matrix = fft2d(img_matrix, 0);
-  gauss(fft_matrix, fft_matrix->rows, 0.05);
+  double cut = 10;
+  low_pass(fft_matrix, cut);
   Matrix *new_mat = fft2d(fft_matrix, 1);
   cv::Mat new_cv = std_to_cv(new_mat);
   imshow(window_name, new_cv);

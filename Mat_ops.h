@@ -1,6 +1,7 @@
 #ifndef MATOPS_H
 #define MATOPS_H
 #include <iostream>
+#include <openacc.h>
 using namespace std;
 
 #ifndef OPENCV

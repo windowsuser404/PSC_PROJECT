@@ -15,7 +15,7 @@ void low_pass(Matrix *&fft_mat, double &cut_off) {
       double dist = (rows / 2.0 - i) * (rows / 2.0 - i) +
                     (cols / 2.0 - j) * (cols / 2.0 - j);
       dist = dist / max;
-      dist = sqrt(dist);
+      dist = sqrt(dist) * 100;
       if (dist > cut_off) {
         fft_mat->matrix[i * cols + j].real(0.0);
         fft_mat->matrix[i * cols + j].imag(0.0);
@@ -33,7 +33,7 @@ void high_pass(Matrix *&fft_mat, double &cut_off) {
       double dist = (rows / 2.0 - i) * (rows / 2.0 - i) +
                     (cols / 2.0 - j) * (cols / 2.0 - j);
       dist = dist / max;
-      dist = sqrt(dist);
+      dist = sqrt(dist) * 100;
       if (dist < cut_off) {
         fft_mat->matrix[i * cols + j].real(0.0);
         fft_mat->matrix[i * cols + j].imag(0.0);

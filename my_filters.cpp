@@ -33,8 +33,9 @@ void high_pass(Matrix *&fft_mat, double &cut_off) {
       double dist = (rows / 2.0 - i) * (rows / 2.0 - i) +
                     (cols / 2.0 - j) * (cols / 2.0 - j);
       dist = dist / max;
-      dist = sqrt(dist) * 100;
+      dist = sqrt(dist) * 100.0;
       if (dist < cut_off) {
+        cout << dist << " =dist" << endl;
         fft_mat->matrix[i * cols + j].real(0.0);
         fft_mat->matrix[i * cols + j].imag(0.0);
       }
@@ -55,8 +56,6 @@ void gauss(Matrix *&fft_mat, int size, double sigma) {
   double sigmaSquared = sigma * sigma;
   double twoSigmaSquared = 2 * sigmaSquared;
   double constant = 1 / (twoSigmaSquared * M_PI);
-  cout << constant << endl;
-
   // Generate the kernel values
   for (int i = 0; i < size; ++i) {
     for (int j = 0; j < size; ++j) {
@@ -64,19 +63,21 @@ void gauss(Matrix *&fft_mat, int size, double sigma) {
       int y = j - center;
       kernel->matrix[i * size + j].real(
           constant * exp(-(x * x + y * y) / twoSigmaSquared));
+      kernel->matrix[i * size + j].imag(0);
+      cout << (x * x + y * y) / twoSigmaSquared << endl;
     }
   }
-  cout << endl << endl;
   double sum = 0.0;
   for (int i = 0; i < size; ++i) {
     for (int j = 0; j < size; ++j) {
       sum += kernel->matrix[i * size + j].real();
     }
   }
-
+  cout << sum << " = sum" << endl;
   for (int i = 0; i < size; ++i) {
     for (int j = 0; j < size; ++j) {
       kernel->matrix[i * size + j] /= sum;
+      // cout << kernel->matrix[i * size + j] << endl;
     }
   }
   for (int i = 0; i < size; ++i) {
@@ -84,18 +85,15 @@ void gauss(Matrix *&fft_mat, int size, double sigma) {
       if ((i + j) % 2 == 0) {
         continue;
       } else {
-        cout << kernel->matrix[i * size + j] << " ";
-        kernel->matrix[i * size + j].real(-1 *
-                                          kernel->matrix[i * size + j].real());
-        cout << kernel->matrix[i * size + j] << endl;
+        kernel->matrix[i * size + j].real(kernel->matrix[i * size + j].real());
       }
     }
   }
 
-  Matrix *temp = fft2d(kernel, 0);
-  delete[] kernel->matrix;
-  delete kernel;
-  kernel = temp;
+  // Matrix *temp = fft2d(kernel, 0);
+  // delete[] kernel->matrix;
+  // delete kernel;
+  // kernel = temp;
   Complex neg1(1.0, 0);
   for (int i = 0; i < size; ++i) {
     for (int j = 0; j < size; ++j) {
@@ -106,7 +104,7 @@ void gauss(Matrix *&fft_mat, int size, double sigma) {
             fft_mat->matrix[i * size + j] * kernel->matrix[i * size + j];
       } else {
         fft_mat->matrix[i * size + j] =
-            neg1 * kernel->matrix[i * size + j] * kernel->matrix[i * size + j];
+            kernel->matrix[i * size + j] * kernel->matrix[i * size + j];
       }
       // cout << fft_mat->matrix[i * size + j] << endl;
     }

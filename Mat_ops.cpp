@@ -60,14 +60,16 @@ Matrix *cv_to_std(cv::Mat &img) {
 }
 
 Matrix *transpose(Matrix *org_matrix) {
-  Matrix *transposed_matrix = new Matrix;
   unsigned int Rows = org_matrix->rows;
   unsigned int Cols = org_matrix->cols;
+  Matrix *transposed_matrix;
+  transposed_matrix = new Matrix;
   transposed_matrix->matrix = new Complex[Cols * Rows];
   transposed_matrix->rows = Cols;
   transposed_matrix->cols = Rows;
 
-#pragma acc data copy(org_matrix[0 : 1], org_matrix->matrix[0 : Rows * Cols])  \
+#pragma acc data copyin(org_matrix[0 : 1],                                     \
+                        org_matrix->matrix[0 : Rows * Cols])                   \
     copy(transposed_matrix[0 : 1],                                             \
          transposed_matrix -> matrix[0 : Rows * Cols])
   {
@@ -78,7 +80,7 @@ Matrix *transpose(Matrix *org_matrix) {
 #pragma acc loop
         for (unsigned int j = 0; j < Cols; j++) {
           transposed_matrix->matrix[i * Cols + j] =
-              org_matrix->matrix[j * Rows + i]; // trans[i][j] = mat[j][i]
+              org_matrix->matrix[j * Rows + i];
         }
       }
     }

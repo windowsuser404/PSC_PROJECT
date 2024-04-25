@@ -4,6 +4,7 @@
 #include <iostream>
 #include <openacc.h>
 #include <opencv2/core/types.hpp>
+#include <string>
 #ifndef OPENCV
 #define OPENCV
 #include <opencv2/core.hpp>
@@ -69,8 +70,10 @@ int main(int argc, char *argv[]) {
   cout << img_matrix->cols << " is new cols" << endl;
   cout << img_matrix->rows << " is new rows" << endl;
   Matrix *fft_matrix = fft2d(img_matrix, 0);
-  double cut_off = 99.0;
-  high_pass(fft_matrix, cut_off);
+  double cut_off = stof(argv[2]);
+  cout << cut_off << endl;
+  // gauss(fft_matrix, fft_matrix->rows, fft_matrix->rows);
+  low_pass(fft_matrix, cut_off);
   Matrix *new_mat = fft2d(fft_matrix, 1);
   cv::Mat new_cv = std_to_cv(new_mat);
   cv::imshow(window_name, new_cv);

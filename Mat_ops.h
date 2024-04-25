@@ -25,6 +25,6 @@ Matrix *cv_to_std(cv::Mat &img);
 
 cv::Mat std_to_cv(Matrix *&input_matrix);
 
-Matrix *transpose(Matrix *&org_matrix);
+Matrix *transpose(Matrix *org_matrix);
 
 #endif

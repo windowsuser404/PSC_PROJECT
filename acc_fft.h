@@ -19,6 +19,6 @@
 
 void test_print();
 void center_ffts(Matrix *&fft_mat);
-Matrix *fft2d(Matrix *&padded_matrix, const int &to_invert);
+Matrix *fft2d(Matrix *padded_matrix, const int to_invert);
 
 #endif

@@ -9,10 +9,6 @@
 
 using namespace std;
 
-float PI = acos(-1);
-
-void test_print() { printf("Hello from fft.h"); }
-
 // #pragma acc routine
 // void cooley_turkey(Complex *matrix, unsigned int &n, int invert) {
 //
@@ -48,13 +44,14 @@ void test_print() { printf("Hello from fft.h"); }
 // }
 
 // will use standard cooley-turkey algorithm
-Matrix *fft2d(Matrix *&padded_matrix, const int &to_invert) {
+Matrix *fft2d(Matrix *padded_matrix, const int to_invert) {
   // to parallelise
   unsigned Rows = padded_matrix->rows;
   unsigned Cols = padded_matrix->cols;
+  double PI = acos(-1);
   Matrix *transposed_matrix;
-#pragma acc data create(PI)                                                    \
-    copy(padded_matrix, padded_matrix -> matrix[0 : Rows * Cols])
+#pragma acc data copy(padded_matrix[0 : 1],                                    \
+                      padded_matrix->matrix[0 : Rows * Cols])
   {
 #pragma acc parallel
     {
@@ -66,9 +63,10 @@ Matrix *fft2d(Matrix *&padded_matrix, const int &to_invert) {
             j ^= bit;
           j ^= bit;
 
-          if (k < j)
+          if (k < j) {
             std::swap(padded_matrix->matrix[i * Cols + k],
                       padded_matrix->matrix[i * Cols + j]);
+          }
         }
 
         for (unsigned int len = 2; len <= Cols; len <<= 1) {
@@ -99,7 +97,7 @@ Matrix *fft2d(Matrix *&padded_matrix, const int &to_invert) {
   Rows = transposed_matrix->rows;
   Cols = transposed_matrix->cols;
 
-#pragma acc data create(PI) copy(transposed_matrix[0 : 1],                     \
+#pragma acc data copyin(PI) copy(transposed_matrix[0 : 1],                     \
                                  transposed_matrix -> matrix[0 : Rows * Cols])
   {
 #pragma acc parallel

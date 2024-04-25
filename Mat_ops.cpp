@@ -59,7 +59,7 @@ Matrix *cv_to_std(cv::Mat &img) {
   return padded_matrix;
 }
 
-Matrix *transpose(Matrix *&org_matrix) {
+Matrix *transpose(Matrix *org_matrix) {
   Matrix *transposed_matrix = new Matrix;
   unsigned int Rows = org_matrix->rows;
   unsigned int Cols = org_matrix->cols;

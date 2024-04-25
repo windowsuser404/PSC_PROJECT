@@ -9,6 +9,18 @@
 
 using namespace std;
 
+void printmat_in_acc(Matrix *&mat) {
+  printf("going to print matrix\n");
+  std::cout.precision(3);
+  for (int i = 0; i < mat->rows / 50; i++) {
+    for (int j = 0; j < mat->cols / 50; j++) {
+      cout << mat->matrix[i * mat->cols + j].real() << " ";
+    }
+    printf("\n");
+  }
+  printf("\n\n");
+}
+
 // #pragma acc routine
 // void cooley_turkey(Complex *matrix, unsigned int &n, int invert) {
 //
@@ -93,10 +105,12 @@ Matrix *fft2d(Matrix *padded_matrix, const int to_invert) {
       }
     }
   }
+  printf("padded\n");
+  printmat_in_acc(padded_matrix);
   transposed_matrix = transpose(padded_matrix);
   Rows = transposed_matrix->rows;
   Cols = transposed_matrix->cols;
-
+  printmat_in_acc(transposed_matrix);
 #pragma acc data copyin(PI) copy(transposed_matrix[0 : 1],                     \
                                  transposed_matrix -> matrix[0 : Rows * Cols])
   {
@@ -141,8 +155,8 @@ Matrix *fft2d(Matrix *padded_matrix, const int to_invert) {
       }
     }
   }
-
   Matrix *result = transpose(transposed_matrix);
+  printmat_in_acc(result);
   delete[] transposed_matrix->matrix;
   delete[] transposed_matrix;
   return result;

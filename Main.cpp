@@ -22,6 +22,18 @@
 
 using namespace cv;
 
+void printmatrix(Matrix *&mat) {
+  cout << "going to print matrix" << endl;
+  std::cout.precision(3);
+  for (int i = 0; i < mat->rows / 50; i++) {
+    for (int j = 0; j < mat->cols / 50; j++) {
+      cout << mat->matrix[i * mat->cols + j].real() << " ";
+    }
+    printf("\n");
+  }
+  printf("\n\n");
+}
+
 int main(int argc, char *argv[]) {
   acc_device_t dev_type = acc_get_device_type();
   if (dev_type == acc_device_none) {
@@ -59,6 +71,7 @@ int main(int argc, char *argv[]) {
   Matrix *fft_matrix = fft2d(img_matrix, 0);
   // gauss(fft_matrix, fft_matrix->rows, 0.05);
   Matrix *new_mat = fft2d(fft_matrix, 1);
+  printmatrix(new_mat);
   cv::Mat new_cv = std_to_cv(new_mat);
   cv::imshow(window_name, new_cv);
   waitKey(0);

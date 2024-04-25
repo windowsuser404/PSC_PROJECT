@@ -67,17 +67,19 @@ Matrix *transpose(Matrix *org_matrix) {
   transposed_matrix->rows = Cols;
   transposed_matrix->cols = Rows;
 
-#pragma acc parallel copyin(org_matrix[0 : 1],                                 \
-                            org_matrix->matrix[0 : Rows * Cols])               \
-    copyout(transposed_matrix[0 : 1],                                          \
-            transposed_matrix -> matrix[0 : Rows * Cols])
+#pragma acc data copy(org_matrix[0 : 1], org_matrix->matrix[0 : Rows * Cols])  \
+    copy(transposed_matrix[0 : 1],                                             \
+         transposed_matrix -> matrix[0 : Rows * Cols])
   {
+#pragma acc parallel
+    {
 #pragma acc loop
-    for (unsigned int i = 0; i < Rows; i++) {
+      for (unsigned int i = 0; i < Rows; i++) {
 #pragma acc loop
-      for (unsigned int j = 0; j < Cols; j++) {
-        transposed_matrix->matrix[i * Cols + j] =
-            org_matrix->matrix[j * Rows + i]; // trans[i][j] = mat[j][i]
+        for (unsigned int j = 0; j < Cols; j++) {
+          transposed_matrix->matrix[i * Cols + j] =
+              org_matrix->matrix[j * Rows + i]; // trans[i][j] = mat[j][i]
+        }
       }
     }
   }

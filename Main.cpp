@@ -49,28 +49,37 @@ void generate_mat(Matrix *&ret) {
 int main(int argc, char *argv[]) {
   printf("Hello\n");
   if (argc == 1) {
-    printf("Given image path as first argument\n");
+    printf("Given file path as first argument\n");
     exit(0);
   }
-  std::string img_path(argv[1]);
-  std::string window_name = "Original image";
-  Mat img = imread(img_path, IMREAD_GRAYSCALE);
+  cout << "Chosse 1 for images and 2 for audio" << endl;
+  int choice;
+  cin >> choice;
+  if (choice == 1) {
+    std::string img_path(argv[1]);
+    std::string window_name = "Original image";
+    Mat img = imread(img_path, IMREAD_GRAYSCALE);
 
-  if (img.empty()) {
-    printf("Couldnt read image\n");
-    return 1;
+    if (img.empty()) {
+      printf("Couldnt read image\n");
+      return 1;
+    }
+
+    Matrix *img_matrix = cv_to_std(img);
+    cout << img_matrix->cols << " is new cols" << endl;
+    cout << img_matrix->rows << " is new rows" << endl;
+    Matrix *fft_matrix = fft2d(img_matrix, 0);
+    gauss(fft_matrix, fft_matrix->rows, 0.05);
+    Matrix *new_mat = fft2d(fft_matrix, 1);
+    cv::Mat new_cv = std_to_cv(new_mat);
+    imshow(window_name, new_cv);
+    waitKey(0);
+    printf("finished showing image\n");
+  } else if (choice == 2) {
+    cout << "Not done yet" << endl;
+    exit(0);
+  } else {
+    cout << "Invalid" << endl;
+    exit(1);
   }
-
-  namedWindow(window_name, WINDOW_NORMAL);
-  Matrix *img_matrix = cv_to_std(img);
-  cout << img_matrix->cols << " is new cols" << endl;
-  cout << img_matrix->rows << " is new rows" << endl;
-  Matrix *fft_matrix = fft2d(img_matrix, 0);
-  double cut = 10;
-  low_pass(fft_matrix, cut);
-  Matrix *new_mat = fft2d(fft_matrix, 1);
-  cv::Mat new_cv = std_to_cv(new_mat);
-  imshow(window_name, new_cv);
-  waitKey(0);
-  printf("finished showing image\n");
 }

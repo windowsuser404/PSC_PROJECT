@@ -1,6 +1,7 @@
 #ifndef MATOPS_H
 #define MATOPS_H
 #include <iostream>
+#include <openacc.h>
 using namespace std;
 
 #ifndef OPENCV
@@ -24,6 +25,6 @@ Matrix *cv_to_std(cv::Mat &img);
 
 cv::Mat std_to_cv(Matrix *&input_matrix);
 
-Matrix *transpose(Matrix *&org_matrix);
+Matrix *transpose(Matrix *org_matrix);
 
 #endif

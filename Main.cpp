@@ -16,8 +16,8 @@
 #include <opencv2/core/operations.hpp>
 
 #include "Mat_ops.h"
+#include "my_fft.h"
 #include "my_filters.h"
-#include "omp_fft.h"
 
 using namespace cv;
 
